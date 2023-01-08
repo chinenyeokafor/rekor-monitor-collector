@@ -240,6 +240,8 @@ func main() {
 		if *once {
 			return
 		}
-		time.Sleep(*interval)
+		nextTime := time.Now().Truncate(time.Minute)
+                nextTime = nextTime.Add(*interval)
+                time.Sleep(time.Until(nextTime))
 	}
 }
