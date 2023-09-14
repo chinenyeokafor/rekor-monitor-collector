@@ -4,9 +4,17 @@ import (
 	"fmt"
 	"os/exec"
 	"sync"
+	"os"
 )
 
 func main() {
+    // Get the current working directory.
+    cwd, err := os.Getwd()
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+
 	var wg sync.WaitGroup
 	wg.Add(2)
 
@@ -14,7 +22,7 @@ func main() {
 	for i := 0; i < 3; i++ {
 		go func(filename string) {
 			defer wg.Done()
-			cmd := exec.Command("go", "run", "/Users/Chinenye/Documents/tmp/monitor3/rekor-monitor/cmd/mirroring/main.go", filename)
+			cmd := exec.Command("go", "run", cwd+"/main.go", filename)
 			err := cmd.Run()
 			if err != nil {
 				fmt.Println(err)
@@ -25,7 +33,7 @@ func main() {
 	//Run a client goroutines
 	go func() {
 		defer wg.Done()
-		cmd := exec.Command("go", "run", "/Users/Chinenye/Documents/tmp/monitor3/rekor-monitor/cmd/mirroring/client.go")
+		cmd := exec.Command("go", "run", cwd+"/client.go")
 		err := cmd.Run()
 		if err != nil {
 			fmt.Println(err)
