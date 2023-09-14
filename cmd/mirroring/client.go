@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -127,7 +126,8 @@ func main() {
 		if err != nil {
 			log.Fatalf("Finding files with .txt extension: %v", err)
 		}
-		i := int(math.Round(0.75 * float64(len(monitors))))
+		fmt.Println(monitors)
+		//monitors := []string{"monitor2/" + logInfoFilePath, "monitor3/" + logInfoFilePath}
 		var checkpoints [][]string
 		for _, monitor := range monitors {
 			chpts, err := readLatestCheckpoints(monitor)
@@ -170,7 +170,7 @@ func main() {
 				if err != nil {
 					log.Fatalf("Converting tree size to int: %v", err)
 				}
-				if counts[strconv.Itoa(treeSize)] >= i && treeSize >= maxTreeSize {
+				if counts[strconv.Itoa(treeSize)] >= 2 && treeSize >= maxTreeSize {
 					maxTreeSize = treeSize
 
 					// Write only the checkpoints with the largest tree size and the newest timestamp to the file.

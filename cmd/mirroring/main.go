@@ -37,7 +37,6 @@ import (
 // Default values for mirroring job parameters
 const (
 	publicRekorServerURL = "https://rekor.sigstore.dev"
-	logInfoFileName      = "logInfo.txt"
 )
 
 // readLatestCheckpoint reads the most recent signed checkpoint
@@ -115,9 +114,11 @@ func deleteOldCheckpoints(logInfoFile string) error {
 // Upon starting, any existing latest snapshot data is loaded and the function runs
 // indefinitely to perform consistency check for every time interval that was specified.
 func main() {
+
 	// Command-line flags that are parameters to the mirroring job
+	logInfoFileName := os.Args[1] // get the filename from the command line argument
 	serverURL := flag.String("url", publicRekorServerURL, "URL to the rekor server that is to be monitored")
-	interval := flag.Duration("interval", 5*time.Minute, "Length of interval between each periodical consistency check")
+	//interval := flag.Duration("interval", 5*time.Minute, "Length of interval between each periodical consistency check")
 	logInfoFile := flag.String("file", logInfoFileName, "Name of the file containing initial merkle tree information")
 	once := flag.Bool("once", false, "Perform consistency check once and exit")
 	flag.Parse()
@@ -241,7 +242,8 @@ func main() {
 			return
 		}
 		nextTime := time.Now().Truncate(time.Minute)
-                nextTime = nextTime.Add(*interval)
-                time.Sleep(time.Until(nextTime))
+		nextTime = nextTime.Add(time.Minute)
+		fmt.Println(nextTime)
+		time.Sleep(time.Until(nextTime))
 	}
 }
